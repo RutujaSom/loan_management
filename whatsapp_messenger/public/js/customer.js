@@ -133,16 +133,3 @@ function load_loan_emis(frm, customer, loan) {
 }
 
 
-
-frappe.listview_settings['Customer'] = {
-    onload(listview) {
-        alert('in load ...')
-        // Hide the sidebar
-        $('.layout-side-section').hide();
-
-        // Hide buttons to the left of +Add Customer
-        $('.list-row-head .btn-group').hide(); // older versions
-        $('.page-actions .btn-group').first().hide(); // newer versions
-    }
-};
-
