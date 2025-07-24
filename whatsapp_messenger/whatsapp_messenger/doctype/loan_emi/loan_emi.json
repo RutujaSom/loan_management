@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-17 12:35:57.570446",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "loan",
+  "emi_amount",
+  "emi_date",
+  "emi_no",
+  "emi_day",
+  "received_date",
+  "total",
+  "emi_transaction",
+  "emi_complete"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "loan",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Loan",
+   "options": "Customer Loan",
+   "reqd": 1
+  },
+  {
+   "fieldname": "emi_amount",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "EMI Amount",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "emi_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "EMI Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "emi_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "EMI No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "emi_day",
+   "fieldtype": "Data",
+   "label": "EMI Day",
+   "read_only": 1
+  },
+  {
+   "fieldname": "received_date",
+   "fieldtype": "Date",
+   "label": "Received Date"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Float",
+   "label": "Total EMI"
+  },
+  {
+   "fieldname": "emi_transaction",
+   "fieldtype": "Table",
+   "label": "EMI Transaction",
+   "options": "EMI Transaction"
+  },
+  {
+   "default": "0",
+   "fieldname": "emi_complete",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is EMI Completed",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-07-24 14:44:31.150182",
+ "modified_by": "Administrator",
+ "module": "Whatsapp Messenger",
+ "name": "Loan EMI",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

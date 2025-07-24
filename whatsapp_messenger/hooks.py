@@ -5,6 +5,64 @@ app_description = "Send Whatsapp Messages"
 app_email = "rutuja.somvanshi@excellminds.com"
 app_license = "mit"
 
+
+doctype_js = {
+    "Customer": "public/js/customer.js",
+    "Customer Loan": "public/js/customer_loan.js",
+    "Loan EMI": "public/js/loan_emi.js"
+
+}
+
+
+doctype_class = {
+    "Loan EMI": "whatsapp_messenger.loan_emi.loan_emi.LoanEMI"
+}
+
+
+doctype_list_js = {
+    "Loan EMI": "public/js/loan_emi.js",
+    "Customer": "public/js/customer_list.js",
+    "Customer Loan": "public/js/customer_loan_list.js",
+    "Loan EMI": "public/js/loan_emi_list.js"
+}
+
+
+
+fixtures = [
+    {
+        "dt": "DocType",
+        "filters": [
+            ["name", "in", [
+                "Customer",
+                "Customer Loan",
+                "Loan EMI",
+                "EMI Transaction",
+            ]]
+        ]
+    },
+    {
+        "dt": "Workspace",
+        "filters": [
+            ["name", "=", "Loan Management"]
+        ]
+    },
+    {
+        "dt": "Module Def",
+        "filters": [
+            ["name", "=", "Loan Management"]
+        ]
+    }
+]
+
+
+app_include_js = [
+    "/assets/js/xlsx.full.min.js"
+]
+
+
+
+
+
 # Apps
 # ------------------
 
