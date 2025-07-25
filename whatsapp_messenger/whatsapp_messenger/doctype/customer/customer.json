@@ -23,7 +23,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Member No",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "title",
@@ -42,7 +43,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-22 16:21:17.860751",
+ "modified": "2025-07-25 12:42:48.303326",
  "modified_by": "Administrator",
  "module": "Whatsapp Messenger",
  "name": "Customer",

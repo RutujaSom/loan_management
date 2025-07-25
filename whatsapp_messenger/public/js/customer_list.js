@@ -33,37 +33,112 @@
 //     }
 // };
 
+// (function () {
+//     function isCustomerListRoute(route) {
+//         return (
+//             Array.isArray(route) &&
+//             route.length >= 2 &&
+//             route[0] === 'List' &&
+//             route[1] === 'Customer'
+//         );
+//     }
+
+//     function toggleCustomerUIElements() {
+//         const route = frappe.router.current_route;
+
+//         const tryToggle = () => {
+//             const sidebar = document.querySelector('.layout-side-section');
+//             const btnGroup = document.querySelector('.page-actions .btn-group');
+
+//             if (isCustomerListRoute(route)) {
+//                 if (sidebar) sidebar.style.display = 'none';
+//                 if (btnGroup) btnGroup.style.display = 'none';
+//             } else {
+//                 if (sidebar) sidebar.style.display = '';
+//                 if (btnGroup) btnGroup.style.display = '';
+//             }
+//         };
+
+//         // Retry logic for async DOM rendering
+//         let attempts = 0;
+//         const interval = setInterval(() => {
+//             attempts++;
+//             tryToggle();
+//             // Stop after 5 tries or when sidebar is found
+//             if (attempts >= 5 || document.querySelector('.layout-side-section')) {
+//                 clearInterval(interval);
+//             }
+//         }, 300);
+//     }
+
+//     // On initial load
+//     frappe.after_ajax(() => {
+//         toggleCustomerUIElements();
+//     });
+
+//     // On route change
+//     frappe.router.on('change', () => {
+//         toggleCustomerUIElements();
+//     });
+
+//     // Observe changes (in case DOM updates after render)
+//     const observer = new MutationObserver(() => {
+//         toggleCustomerUIElements();
+//     });
+
+//     observer.observe(document.body, {
+//         childList: true,
+//         subtree: true
+//     });
+// })();
+
+
+
+
 (function () {
     function isCustomerListRoute(route) {
-        return route[0] === 'List' && route[1] === 'Customer' && (route[2] === 'List' || !route[2]);
+        return (
+            Array.isArray(route) &&
+            route.length >= 2 &&
+            route[0] === 'List' &&
+            route[1] === 'Customer'
+        );
     }
 
-    function removeCustomerUIElements() {
-        if (!isCustomerListRoute(frappe.router.current_route)) return;
-
-        const sidebar = document.querySelector('.layout-side-section');
-        const btnGroup = document.querySelector('.page-actions .btn-group');
-
-        if (sidebar) sidebar.remove();
-        if (btnGroup) btnGroup.remove();
+    function hideCustomerElementsImmediately() {
+        // Create a <style> tag and inject CSS rules into the DOM
+        const style = document.createElement('style');
+        style.id = 'customer-ui-hide-style';
+        style.innerHTML = `
+            .hide-customer-ui .layout-side-section,
+            .hide-customer-ui .page-actions .btn-group {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
     }
 
-    // ✅ Run after full page load (covers full refresh)
+    function toggleCustomerPageClass() {
+        const route = frappe.router.current_route;
+        const body = document.body;
+
+        if (isCustomerListRoute(route)) {
+            body.classList.add('hide-customer-ui');
+        } else {
+            body.classList.remove('hide-customer-ui');
+        }
+    }
+
+    // Inject the CSS rules once on load
+    hideCustomerElementsImmediately();
+
+    // Run initially after AJAX (page load)
     frappe.after_ajax(() => {
-        setTimeout(removeCustomerUIElements, 300);
+        toggleCustomerPageClass();
     });
 
-    // ✅ React to route changes (SPA navigation)
+    // Also run on every route change
     frappe.router.on('change', () => {
-        setTimeout(removeCustomerUIElements, 300);
-    });
-
-    // ✅ Watch for DOM changes in case layout is lazy-rendered
-    const observer = new MutationObserver(() => {
-        removeCustomerUIElements();
-    });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
+        toggleCustomerPageClass();
     });
 })();

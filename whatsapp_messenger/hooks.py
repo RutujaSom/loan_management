@@ -56,7 +56,8 @@ fixtures = [
 
 
 app_include_js = [
-    "/assets/js/xlsx.full.min.js"
+    "/assets/js/xlsx.full.min.js",
+    "/assets/whatsapp_messenger/js/form_navbar.js"
 ]
 
 

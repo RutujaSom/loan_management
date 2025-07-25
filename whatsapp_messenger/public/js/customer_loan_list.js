@@ -1,32 +1,57 @@
 (function () {
-    function isCustomerListRoute(route) {
-        return route[0] === 'List' && route[1] === 'Customer Loan' && (route[2] === 'List' || !route[2]);
+    // Check if current route is "Customer Loan" list view
+    function isCustomerLoanListRoute(route) {
+        return (
+            Array.isArray(route) &&
+            route.length >= 2 &&
+            route[0] === 'List' &&
+            route[1] === 'Customer Loan'
+        );
     }
 
-    function removeCustomerUIElements() {
-        if (!isCustomerListRoute(frappe.router.current_route)) return;
+    // Inject style to hide elements when class is active
+    function injectStyleOnce() {
+        if (document.getElementById('customer-loan-style')) return;
 
-        const sidebar = document.querySelector('.layout-side-section');
-        const btnGroup = document.querySelector('.page-actions .btn-group');
-
-        if (sidebar) sidebar.remove();
-        if (btnGroup) btnGroup.remove();
+        const style = document.createElement('style');
+        style.id = 'customer-loan-style';
+        style.innerHTML = `
+            body.hide-customer-loan-ui .layout-side-section,
+            body.hide-customer-loan-ui .page-actions .btn-group {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
     }
 
-    // ✅ Run after full page load (covers full refresh)
+    // Toggle class on body based on route
+    function toggleCustomerLoanUI() {
+        const body = document.body;
+        if (isCustomerLoanListRoute(frappe.router.current_route)) {
+            body.classList.add('hide-customer-loan-ui');
+        } else {
+            body.classList.remove('hide-customer-loan-ui');
+        }
+    }
+
+    // Inject CSS rules immediately
+    injectStyleOnce();
+
+    // Run initially after full page load
     frappe.after_ajax(() => {
-        setTimeout(removeCustomerUIElements, 300);
+        toggleCustomerLoanUI();
     });
 
-    // ✅ React to route changes (SPA navigation)
+    // Also respond to route changes
     frappe.router.on('change', () => {
-        setTimeout(removeCustomerUIElements, 300);
+        toggleCustomerLoanUI();
     });
 
-    // ✅ Watch for DOM changes in case layout is lazy-rendered
+    // Watch for DOM mutations in case elements load later
     const observer = new MutationObserver(() => {
-        removeCustomerUIElements();
+        toggleCustomerLoanUI();
     });
+
     observer.observe(document.body, {
         childList: true,
         subtree: true

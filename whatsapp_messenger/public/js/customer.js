@@ -133,3 +133,171 @@ function load_loan_emis(frm, customer, loan) {
 }
 
 
+
+// (function () {
+//     const custom_doctypes = [
+//         { name: "Customer", label: "Customer" },
+//         { name: "Customer Loan", label: "Customer Loan" },
+//         { name: "Loan EMI", label: "Loan EMI" }
+//     ];
+
+//     function isValidRoute(route) {
+//         return (
+//             route[0] === "Form" &&
+//             ["Customer", "Customer Loan", "Loan EMI"].includes(route[1])
+//         );
+//     }
+
+//     function insertNavbarWhenReady() {
+//         let attempts = 0;
+//         const maxAttempts = 15;
+
+//         const interval = setInterval(() => {
+//             if (!isValidRoute(frappe.router.current_route)) {
+//                 clearInterval(interval);
+//                 return;
+//             }
+
+//             const pageHead = document.querySelector('.page-head');
+//             const container = pageHead?.querySelector('.container') || pageHead;
+
+//             if (container && !document.querySelector('#custom-doctype-navbar')) {
+//                 const navbar = document.createElement('div');
+//                 navbar.id = 'custom-doctype-navbar';
+//                 navbar.style.marginTop = '10px';
+//                 navbar.style.marginBottom = '10px';
+
+//                 navbar.innerHTML = `
+//                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+//                         ${custom_doctypes.map(dt =>
+//                             `<button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', '${dt.name}')">${dt.label}</button>`
+//                         ).join('')}
+//                     </div>
+//                 `;
+
+//                 container.appendChild(navbar);
+//                 clearInterval(interval); // Stop retrying after success
+//             }
+
+//             if (++attempts >= maxAttempts) {
+//                 clearInterval(interval);
+//             }
+//         }, 300);
+//     }
+
+//     // Run on full load
+//     frappe.after_ajax(() => {
+//         insertNavbarWhenReady();
+//     });
+
+//     // Run on route change (List → Form, etc.)
+//     frappe.router.on('change', () => {
+//         insertNavbarWhenReady();
+//     });
+
+//     // Watch DOM changes as backup
+//     const observer = new MutationObserver(() => {
+//         insertNavbarWhenReady();
+//     });
+//     observer.observe(document.body, {
+//         childList: true,
+//         subtree: true
+//     });
+// })();
+
+
+
+
+
+
+
+
+// frappe.ui.form.on('Customer', {
+//     refresh: function (frm) {
+//         // Avoid duplicate navbar
+//         alert('in data ...')
+//         if (document.querySelector('#custom-doctype-navbar')) return;
+
+//         const custom_doctypes = [
+//             { name: "Customer", label: "Customer" },
+//             { name: "Customer Loan", label: "Customer Loan" },
+//             { name: "Loan EMI", label: "Loan EMI" }
+//         ];
+
+//         const navbar = document.createElement('div');
+//         navbar.id = 'custom-doctype-navbar';
+//         navbar.style.marginTop = '10px';
+//         navbar.style.marginBottom = '10px';
+
+//         navbar.innerHTML = `
+//             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+//                 ${custom_doctypes.map(dt =>
+//                     `<button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', '${dt.name}')">${dt.label}</button>`
+//                 ).join('')}
+//             </div>
+//         `;
+
+//         // Append inside form layout container
+//         const layoutWrapper = frm.fields_dict[Object.keys(frm.fields_dict)[0]].wrapper.closest('.form-layout');
+
+//         if (layoutWrapper) {
+//             layoutWrapper.prepend(navbar);
+//         }
+//     }
+// });
+
+
+// frappe.ui.form.on('Customer', {
+//     refresh(frm) {
+//         alert('ad')
+//         // Avoid duplicate
+//         if (document.querySelector('#custom-doctype-navbar')) return;
+//         alert('daya  ...' )
+//         const navbar = document.createElement('div');
+//         navbar.id = 'custom-doctype-navbar';
+//         navbar.style.margin = '10px 0';
+
+//         navbar.innerHTML = `
+//             <div style="display: flex; gap: 10px;">
+//                 <button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', 'Customer')">Customer</button>
+//                 <button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', 'Customer Loan')">Customer Loan</button>
+//                 <button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', 'Loan EMI')">Loan EMI</button>
+//             </div>
+//         `;
+
+//         const wrapper = frm.fields_dict[Object.keys(frm.fields_dict)[0]]?.wrapper.closest('.form-layout');
+//         if (wrapper) {
+//             wrapper.prepend(navbar);
+//         }
+//     }
+// });
+
+
+frappe.ui.form.on('Customer', {
+    refresh(frm) {
+        const allowedDoctypes = ['Customer', 'Customer Loan', 'Loan EMI'];
+        if (!allowedDoctypes.includes(frm.doctype)) return;
+
+        // Always remove old navbar if present (prevents duplication)
+        const existing = document.querySelector('#custom-doctype-navbar');
+        if (existing) existing.remove();
+
+        const navbar = document.createElement('div');
+        navbar.id = 'custom-doctype-navbar';
+        navbar.style.margin = '10px 0';
+
+        navbar.innerHTML = `
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                ${allowedDoctypes.map(dt =>
+                    `<button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', '${dt}')">${dt}</button>`
+                ).join('')}
+            </div>
+        `;
+
+        // Append inside the form layout
+        const wrapper = frm.fields_dict[Object.keys(frm.fields_dict)[0]]?.wrapper.closest('.form-layout');
+        if (wrapper) {
+            wrapper.prepend(navbar);
+        }
+    }
+});

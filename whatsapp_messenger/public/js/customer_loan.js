@@ -46,3 +46,35 @@ function open_import_dialog(frm) {
 
     d.show();
 }
+
+
+
+
+frappe.ui.form.on('Customer Loan', {
+    refresh(frm) {
+        const allowedDoctypes = ['Customer', 'Customer Loan', 'Loan EMI'];
+        if (!allowedDoctypes.includes(frm.doctype)) return;
+
+        // Always remove old navbar if present (prevents duplication)
+        const existing = document.querySelector('#custom-doctype-navbar');
+        if (existing) existing.remove();
+
+        const navbar = document.createElement('div');
+        navbar.id = 'custom-doctype-navbar';
+        navbar.style.margin = '10px 0';
+
+        navbar.innerHTML = `
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                ${allowedDoctypes.map(dt =>
+                    `<button class="btn btn-sm btn-light border" onclick="frappe.set_route('List', '${dt}')">${dt}</button>`
+                ).join('')}
+            </div>
+        `;
+
+        // Append inside the form layout
+        const wrapper = frm.fields_dict[Object.keys(frm.fields_dict)[0]]?.wrapper.closest('.form-layout');
+        if (wrapper) {
+            wrapper.prepend(navbar);
+        }
+    }
+});
